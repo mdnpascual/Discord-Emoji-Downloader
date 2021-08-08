@@ -153,6 +153,15 @@ $(document).ready(function() {
                     });
                 }
 
+                $("#animated-option").checkbox().first().checkbox({
+                    onChecked: function() {
+                        $console.append('onChecked called<br>');
+                    },
+                    onUnchecked: function() {
+                        $console.append('onUnchecked called<br>');
+                    }
+                })
+
                 $("#emoji-select").dropdown({
                     values: emojisDropdown,
                     placeholder: "Select Emojis",
