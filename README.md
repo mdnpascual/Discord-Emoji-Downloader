@@ -2,4 +2,8 @@
 
 This little tool will allow you to download a ZIP archive with all emojis from a Discord server.
 
-[Click here](https://thatiemsz.github.io/Discord-Emoji-Downloader)
+Difference from original fork
+
+- Added an option to only get animated emojis
+
+[Click here](https://mdnpascual.github.io/Discord-Emoji-Downloader/)
