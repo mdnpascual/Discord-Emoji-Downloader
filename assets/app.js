@@ -89,6 +89,10 @@ $(document).ready(function() {
     $(".menu .item").tab();
     $("#emojis").hide();
     $("#emojis2").hide();
+
+    let animatedOnly;
+    animatedOnly = false;
+
     $("#options").hide();
 
     $("#tokenHelp").click(() => {
@@ -121,6 +125,16 @@ $(document).ready(function() {
             }
         });
 
+        $("#options").show();
+        $(".animatedOnly").checkbox();
+        $("input[name=animatedOnly]").change(function(){
+            if($(this).is(":checked")){
+                animatedOnly = true;
+            }else{
+                animatedOnly = false;
+            }
+        });
+
         $("#server-select").dropdown({
             values: guildsDropdown,
             placeholder: "Select Server",
@@ -134,7 +148,7 @@ $(document).ready(function() {
                 if (!res.ok) return error("Could not fetch server emojis.");
 
                 globalThis.guild = await res.json();
-                globalThis.emojis = renameEmoji(globalThis.guild.emojis)
+                globalThis.emojis = renameAndFilterEmoji(globalThis.guild.emojis)
                     .sort(sortAlpha);
                 let emojis = globalThis.emojis.reduce((acc, val, i) => {
                     if (i > 149) {
@@ -153,16 +167,6 @@ $(document).ready(function() {
                         selected: true
                     });
                 }
-
-                $("#options").show();
-                $(".animatedOnly").checkbox();
-                $("input[name=animatedOnly]").change(function(){
-                    if($(this).is(":checked")){
-                        console.log("Checked");
-                    }else{
-                        console.log("Unchecked")
-                    }
-                });
 
                 $("#emoji-select").dropdown({
                     values: emojisDropdown,
@@ -212,7 +216,7 @@ $(document).ready(function() {
 
             show("#loading");
 
-            const renamedEmoji = renameEmoji(globalThis.emojis);
+            const renamedEmoji = renameAndFilterEmoji(globalThis.emojis);
             const zip = new JSZip();
             let count = 0;
             for (let i in renamedEmoji) {
@@ -256,7 +260,7 @@ $(document).ready(function() {
 
             show("#loading");
 
-            const renamedEmoji = renameEmoji(guild.emojis);
+            const renamedEmoji = renameAndFilterEmoji(guild.emojis);
             const zip = new JSZip();
             let count = 0;
             for (let i in renamedEmoji) {
@@ -296,7 +300,7 @@ $(document).ready(function() {
         show("#error");
     }
 
-    function renameEmoji(emojis) {
+    function renameAndFilterEmoji(emojis) {
         if (!emojis) return console.error("No Emojis Array");
         const emojiCountByName = {};
         const disambiguatedEmoji = [];
@@ -322,7 +326,10 @@ $(document).ready(function() {
                 emojisById[emoji.id] = emoji;
                 customEmojis[emoji.name] = emoji;
             }
-            disambiguatedEmoji.push(emoji);
+
+            if((animatedOnly && emoji.animated) || !animatedOnly){
+                disambiguatedEmoji.push(emoji);
+            }
         };
 
         emojis.forEach(disambiguateEmoji);
