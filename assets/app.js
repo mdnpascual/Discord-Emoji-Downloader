@@ -89,6 +89,7 @@ $(document).ready(function() {
     $(".menu .item").tab();
     $("#emojis").hide();
     $("#emojis2").hide();
+    $("#options").hide();
 
     $("#tokenHelp").click(() => {
         $('.ui.basic.modal').modal('show');
@@ -153,14 +154,15 @@ $(document).ready(function() {
                     });
                 }
 
-                $("#animated-option").checkbox().first().checkbox({
-                    onChecked: function() {
-                        $console.append('onChecked called<br>');
-                    },
-                    onUnchecked: function() {
-                        $console.append('onUnchecked called<br>');
+                $("#options").show();
+                $(".animatedOnly").checkbox();
+                $("input[name=animatedOnly]").change(function(){
+                    if($(this).is(":checked")){
+                        console.log("Checked");
+                    }else{
+                        console.log("Unchecked")
                     }
-                })
+                });
 
                 $("#emoji-select").dropdown({
                     values: emojisDropdown,
